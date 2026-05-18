@@ -41,7 +41,7 @@ const MainContent = () => {
     
     try {
         // Python local server ka humanize endpoint hit karna
-        const response = await fetch("http://127.0.0.1:5000/humanize", {
+        const response = await fetch("https://hamzaparas-glyphhuman.hf.space/humanize", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -198,7 +198,7 @@ const handleDetect = async (e) => {
 
     try {
         // Python server par data bhejna (POST request)
-        const response = await fetch("http://127.0.0.1:5000/analyze", {
+        const response = await fetch("https://hamzaparas-glyphhuman.hf.space/analyze", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
