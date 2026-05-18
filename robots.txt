@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://glyphhuman.resumepro.it.com/sitemap.xml
