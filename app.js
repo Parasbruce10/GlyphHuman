@@ -645,11 +645,11 @@ const HomeContent = ({ setActivePage }) => {
 
                     <div className="home-stats-row">
                         <div className="home-stat">
-                            <div className="home-stat-num">50K+</div>
+                            <div className="home-stat-num">100+</div>
                             <div className="home-stat-label">Texts Humanized</div>
                         </div>
                         <div className="home-stat">
-                            <div className="home-stat-num">98%</div>
+                            <div className="home-stat-num">80%</div>
                             <div className="home-stat-label">Detection Bypass Rate</div>
                         </div>
                         <div className="home-stat">
