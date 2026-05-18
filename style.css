@@ -319,14 +319,61 @@
 }
 
 /* Tier 1: Links Matrix */
-.footer-nav {
+/* Naya Tier 1: 3 Column Layout */
+.footer-top-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.footer-brand .header-logo {
+    margin-bottom: 12px;
+    display: inline-flex;
+}
+
+.footer-desc {
+    color: #9ca3af;
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 340px;
+}
+
+.footer-links-col {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 28px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04); /* Thin clean separator */
+    flex-direction: column;
+    gap: 12px;
+}
+
+.footer-col-title {
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Links ki styling update ki hai taake vertical list mein achay lagein */
+.footer-link {
+    color: #9ca3af;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    width: fit-content;
+}
+
+/* Purani underline hata di kyunke ab links upar neeche hain */
+.footer-link::after {
+    display: none; 
+}
+
+.footer-link:hover {
+    color: #a5b4fc;
+    text-shadow: 0 0 10px rgba(165, 180, 252, 0.5);
+    transform: translateX(5px); /* Hover karne par text thora aagay slide hoga */
 }
 
 .footer-link {
@@ -1150,9 +1197,28 @@
         padding: 24px 18px 20px;
     }
 
-    .footer-nav {
-        gap: 12px 18px;
+    .footer-top-row {
+        grid-template-columns: 1fr; /* Mobile par single column ban jayega */
+        text-align: center;
+        gap: 35px;
+        padding-bottom: 20px;
+    }
+
+    .footer-brand .header-logo {
         justify-content: center;
+    }
+
+    .footer-desc {
+        margin: 0 auto;
+        max-width: 100%;
+    }
+
+    .footer-links-col {
+        align-items: center;
+    }
+
+    .footer-link:hover {
+        transform: none; /* Mobile par slide effect band kar diya taake layout kharab na ho */
     }
 
     .footer-link {
