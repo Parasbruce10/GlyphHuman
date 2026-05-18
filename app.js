@@ -790,21 +790,44 @@ const HomeContent = ({ setActivePage }) => {
     );
 };
 // 3. Footer Component
+// 3. Footer Component
 const Footer = ({ setActivePage }) => {
     return (
         <footer className="app-footer">
             <div className="footer-container">
-                <div className="footer-nav">
-                    {/* Home dabane par default humanizer par wapis aaye ga */}
-                    <a href="#home" onClick={(e) => { e.preventDefault(); setActivePage('home'); }} className="footer-link">Home</a>
-                    <a href="#humanizer" onClick={(e) => { e.preventDefault(); setActivePage('humanizer'); }} className="footer-link">Humanizer</a>
-                    <a href="#detector" onClick={(e) => { e.preventDefault(); setActivePage('detector'); }} className="footer-link">AI Detector</a>
-                    <a href="#contact" onClick={(e) => { e.preventDefault(); setActivePage('contact'); }} className="footer-link">Contact</a>
-                    <a href="#about" onClick={(e) => { e.preventDefault(); setActivePage('about'); }} className="footer-link">About Us</a>
-                    <a href="#privacy" onClick={(e) => { e.preventDefault(); setActivePage('privacy'); }} className="footer-link">Privacy Policy</a>
-                    <a href="#terms" onClick={(e) => { e.preventDefault(); setActivePage('terms'); }} className="footer-link">Terms & Conditions</a>
+                
+                {/* NAYA TOP ROW - 3 Columns Layout */}
+                <div className="footer-top-row">
+                    
+                    {/* Column 1: Brand Info & Description */}
+                    <div className="footer-brand">
+                        <div className="header-logo" onClick={() => setActivePage('home')} style={{ cursor: 'pointer', fontSize: '24px', marginBottom: '12px', justifyContent: 'flex-start' }}>
+                            <span className="logo-icon">✦</span> GlyphHuman
+                        </div>
+                        <p className="footer-desc">
+                            Bridging the gap between artificial intelligence and natural human expression. Transform robotic text into natural prose and bypass AI detectors effortlessly.
+                        </p>
+                    </div>
+
+                    {/* Column 2: Quick Navigation */}
+                    <div className="footer-links-col">
+                        <h4 className="footer-col-title">Quick Nav</h4>
+                        <a href="#home" onClick={(e) => { e.preventDefault(); setActivePage('home'); }} className="footer-link">Home</a>
+                        <a href="#humanizer" onClick={(e) => { e.preventDefault(); setActivePage('humanizer'); }} className="footer-link">Humanizer</a>
+                        <a href="#detector" onClick={(e) => { e.preventDefault(); setActivePage('detector'); }} className="footer-link">AI Detector</a>
+                        <a href="#about" onClick={(e) => { e.preventDefault(); setActivePage('about'); }} className="footer-link">About Us</a>
+                        <a href="#contact" onClick={(e) => { e.preventDefault(); setActivePage('contact'); }} className="footer-link">Contact</a>
+                    </div>
+
+                    {/* Column 3: Legal Pages */}
+                    <div className="footer-links-col">
+                        <h4 className="footer-col-title">Legal</h4>
+                        <a href="#privacy" onClick={(e) => { e.preventDefault(); setActivePage('privacy'); }} className="footer-link">Privacy Policy</a>
+                        <a href="#terms" onClick={(e) => { e.preventDefault(); setActivePage('terms'); }} className="footer-link">Terms & Conditions</a>
+                    </div>
                 </div>
-                {/* Lower Tier: Copyright Left Par Aur Paras Ka Badge Right Par */}
+
+                {/* Lower Tier: Copyright Left Par Aur Paras Ka Badge Right Par (Waisa hi rakha hai) */}
                 <div className="footer-bottom-row">
                     <div className="footer-credits">
                         <span className="copyright-text">
@@ -823,7 +846,6 @@ const Footer = ({ setActivePage }) => {
         </footer>
     );
 };
-
 // App Function Component (Fully updated and structural shell)
 // App Function Component (Fully updated routing logic)
 // App component ka state aur routing block is tarah change karein:
