@@ -1198,10 +1198,15 @@
     }
 
     .footer-top-row {
-        grid-template-columns: 1fr; /* Mobile par single column ban jayega */
+        grid-template-columns: 1fr 1fr; /* Mobile par 2 columns banayega */
         text-align: center;
-        gap: 35px;
+        gap: 30px 15px; /* Upar neeche 30px gap, aur side-by-side 15px gap */
         padding-bottom: 20px;
+    }
+
+    /* Brand info ko full width karne ke liye */
+    .footer-brand {
+        grid-column: 1 / -1; 
     }
 
     .footer-brand .header-logo {
