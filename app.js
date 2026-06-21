@@ -1,4 +1,6 @@
-// React Hook Destructuring Line (Jo aapko chahiye thi)
+// React Hook Destructuring Line (Jo aapko chahiye thi)// ✅ Ensure React is available globally
+const React = window.React;
+const ReactDOM = window.ReactDOM;
 const { useState, useEffect } = React;
 
 // 1. Header Component
