@@ -25,11 +25,11 @@
 
     <link rel="stylesheet" href="style.css">
 
-    <!-- React and ReactDOM CDN -->
+    <!-- ✅ React and ReactDOM - Production Builds -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     
-    <!-- Babel Standalone for JSX -->
+    <!-- ✅ Babel Standalone - In-browser JSX transformer -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 
@@ -37,7 +37,7 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     
-    <!-- app.js ko yahan load karo -->
+    <!-- ✅ App Script - type="text/babel" is required for JSX -->
     <script type="text/babel" src="app.js"></script>
 </body>
 
