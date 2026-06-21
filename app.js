@@ -1,10 +1,15 @@
-// React Hook Destructuring Line (Jo aapko chahiye thi)// ✅ Ensure React is available globally
+// ============================================================
+// ✅ FIX: React ko global window se access karo
+// ============================================================
 const React = window.React;
 const ReactDOM = window.ReactDOM;
+
+// React Hook Destructuring
 const { useState, useEffect } = React;
 
+// ============================================================
 // 1. Header Component
-// Header component ko is tarah se change karein:
+// ============================================================
 const Header = ({ setActivePage }) => {
     return (
         <header className="app-header">
@@ -15,92 +20,80 @@ const Header = ({ setActivePage }) => {
     );
 };
 
-// 2. Main Dashboard Form Component
+// ============================================================
+// 2. Main Dashboard Form Component (Humanizer)
+// ============================================================
 const MainContent = () => {
-    // Ab React.useState ki jagah direct Hooks ka use ho raha hai
     const [inputText, setInputText] = useState("");
     const [outputText, setOutputText] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [copySuccess, setCopySuccess] = useState(false);
 
-    // Dynamic Word Count Logic
     const getWordCount = (text) => {
         const cleanText = text.trim();
         return cleanText === "" ? 0 : cleanText.split(/\s+/).length;
     };
 
-    // Core Text Transformation / Humanize Process
     const handleHumanize = async (e) => {
-    e.preventDefault(); // Form reload control
-    
-    if (!inputText.trim()) {
-        alert("Please paste or type some AI generated text first!");
-        return;
-    }
-
-    setIsLoading(true);
-    setCopySuccess(false);
-    
-    try {
-        // Python local server ka humanize endpoint hit karna
-        const response = await fetch("https://hamzaparas-glyphhuman.hf.space/humanize", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ text: inputText })
-        });
-
-        if (!response.ok) {
-            throw new Error("Backend connection error");
+        e.preventDefault();
+        
+        if (!inputText.trim()) {
+            alert("Please paste or type some AI generated text first!");
+            return;
         }
 
-        const data = await response.json();
+        setIsLoading(true);
+        setCopySuccess(false);
         
-        // Python se aane wala output display screen mein daalna
-        setOutputText(data.humanized);
-        
-    } catch (error) {
-        console.error("Humanize Error:", error);
-        alert("Flask server contact nahi ho pa raha. Check karein terminal par python app.py chal raha hai!");
-    } finally {
-        setIsLoading(false);
-    }
-};
+        try {
+            const response = await fetch("https://hamzaparas-glyphhuman.hf.space/humanize", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ text: inputText })
+            });
 
-    // Reset Form Formats
+            if (!response.ok) {
+                throw new Error("Backend connection error");
+            }
+
+            const data = await response.json();
+            setOutputText(data.humanized);
+            
+        } catch (error) {
+            console.error("Humanize Error:", error);
+            alert("Flask server contact nahi ho pa raha. Check karein terminal par python app.py chal raha hai!");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const handleReset = () => {
         setInputText("");
         setOutputText("");
         setCopySuccess(false);
     };
 
-    // Clipboard Copy Feature
     const handleCopyToClipboard = () => {
         if (!outputText) return;
         navigator.clipboard.writeText(outputText);
         setCopySuccess(true);
-        setTimeout(() => setCopySuccess(false), 2000); // 2 sec baad hide hojayega
+        setTimeout(() => setCopySuccess(false), 2000);
     };
 
     return (
-    <main className="app-main humanizer-page-layout">
-        
-    
-    
-        {/* Heading Area - Ab bilkul Header ke neeche top par block level par show hoga */}
-        <div style={{ textAlign: 'center', marginTop: '35px', marginBottom: '20px', padding: '0 15px' }}>
-            <h1 style={{ fontSize: '2.5rem', color: '#ffffff', fontWeight: '800', letterSpacing: '-0.5px', marginBottom: '10px', fontFamily: 'system-ui, sans-serif' }}>
-                AI Text <span style={{ background: 'linear-gradient(45deg, #a855f7, #6366f1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Humanizer</span> ✨
-            </h1>
-            <p style={{ color: '#94a3b8', fontSize: '1.05rem', maxWidth: '600px', margin: '0 auto', lineHeight: '1.5' }}>
-                Convert your robotic AI content into natural, human-written style instantly and bypass AI detectors.
-            </p>
-        </div>
+        <main className="app-main humanizer-page-layout">
+            <div style={{ textAlign: 'center', marginTop: '35px', marginBottom: '20px', padding: '0 15px' }}>
+                <h1 style={{ fontSize: '2.5rem', color: '#ffffff', fontWeight: '800', letterSpacing: '-0.5px', marginBottom: '10px', fontFamily: 'system-ui, sans-serif' }}>
+                    AI Text <span style={{ background: 'linear-gradient(45deg, #a855f7, #6366f1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Humanizer</span> ✨
+                </h1>
+                <p style={{ color: '#94a3b8', fontSize: '1.05rem', maxWidth: '600px', margin: '0 auto', lineHeight: '1.5' }}>
+                    Convert your robotic AI content into natural, human-written style instantly and bypass AI detectors.
+                </p>
+            </div>
 
-        <form className="premium-dashboard-form" onSubmit={handleHumanize}>
-                
-                {/* LEFT PANEL: Input Box Area */}
+            <form className="premium-dashboard-form" onSubmit={handleHumanize}>
                 <div className="form-panel input-panel-side">
                     <div className="panel-header-strip">
                         <span className="panel-headline">AI Generated Text Form</span>
@@ -118,15 +111,12 @@ const MainContent = () => {
                         onChange={(e) => setInputText(e.target.value)}
                     />
                     
-                    
-
                     <div className="panel-footer-strip">
                         <span className="live-stat-badge">{getWordCount(inputText)} words</span>
                         <span className="live-stat-badge">{inputText.length} characters</span>
                     </div>
                 </div>
 
-                {/* CENTER DIVIDER: Main Trigger Action Button */}
                 <div className="form-action-divider">
                     <button 
                         type="submit"
@@ -141,7 +131,6 @@ const MainContent = () => {
                     </button>
                 </div>
 
-                {/* RIGHT PANEL: Output Result View */}
                 <div className="form-panel output-panel-side">
                     <div className="panel-header-strip">
                         <span className="panel-headline">Humanized Output Form</span>
@@ -174,56 +163,52 @@ const MainContent = () => {
                         )}
                     </div>
                 </div>
-
             </form>
         </main>
     );
 };
-// ==========================================
-// NAYA COMPONENT: AI Detector Page
-// ==========================================
+
+// ============================================================
+// 3. Detector Component
+// ============================================================
 const DetectorContent = () => {
     const [inputText, setInputText] = useState("");
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [scores, setScores] = useState(null);
 
-    // Sirf handleDetect wale hissay ko update karna hai
-const handleDetect = async (e) => {
-    e.preventDefault();
-    if (!inputText.trim()) {
-        alert("Bhai, pehle thora text toh paste karo!");
-        return;
-    }
-
-    setIsAnalyzing(true);
-    setScores(null);
-
-    try {
-        // Python server par data bhejna (POST request)
-        const response = await fetch("https://hamzaparas-glyphhuman.hf.space/analyze", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ text: inputText })
-        });
-
-        if (!response.ok) {
-            throw new Error("Server error");
+    const handleDetect = async (e) => {
+        e.preventDefault();
+        if (!inputText.trim()) {
+            alert("Bhai, pehle thora text toh paste karo!");
+            return;
         }
 
-        const data = await response.json();
-        
-        // Python se aane wala real percentage state mein save karna
-        setScores({ ai: data.ai, human: data.human });
+        setIsAnalyzing(true);
+        setScores(null);
 
-    } catch (error) {
-        console.error("Error analyzing text:", error);
-        alert("API connect nahi ho rahi. Make sure Python server chal raha hai!");
-    } finally {
-        setIsAnalyzing(false);
-    }
-};
+        try {
+            const response = await fetch("https://hamzaparas-glyphhuman.hf.space/analyze", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ text: inputText })
+            });
+
+            if (!response.ok) {
+                throw new Error("Server error");
+            }
+
+            const data = await response.json();
+            setScores({ ai: data.ai, human: data.human });
+
+        } catch (error) {
+            console.error("Error analyzing text:", error);
+            alert("API connect nahi ho rahi. Make sure Python server chal raha hai!");
+        } finally {
+            setIsAnalyzing(false);
+        }
+    };
 
     return (
         <main className="app-main humanizer-page-layout">
@@ -237,7 +222,6 @@ const handleDetect = async (e) => {
             </div>
 
             <form className="premium-dashboard-form" onSubmit={handleDetect} style={{ minHeight: '400px' }}>
-                {/* Input Panel */}
                 <div className="form-panel input-panel-side">
                     <div className="panel-header-strip">
                         <span className="panel-headline">Text to Analyze</span>
@@ -255,14 +239,12 @@ const handleDetect = async (e) => {
                     />
                 </div>
 
-                {/* Center Divider / Button */}
                 <div className="form-action-divider">
                     <button type="submit" className="glow-humanize-submit-btn" disabled={isAnalyzing} style={{ background: 'linear-gradient(135deg, #ea580c 0%, #dc2626 100%)', boxShadow: '0 4px 25px rgba(234, 88, 12, 0.45)' }}>
                         {isAnalyzing ? <span className="css-loading-circle"></span> : <>Analyze Text 🔍</>}
                     </button>
                 </div>
 
-                {/* Output/Score Panel */}
                 <div className="form-panel output-panel-side">
                     <div className="panel-header-strip">
                         <span className="panel-headline">Detection Results</span>
@@ -273,12 +255,10 @@ const handleDetect = async (e) => {
                             <div className="empty-form-placeholder">Awaiting text analysis...</div>
                         ) : (
                             <div style={{ width: '100%', textAlign: 'center' }}>
-                                {/* AI Score Box */}
                                 <div style={{ marginBottom: '20px', padding: '15px', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '12px' }}>
                                     <h3 style={{ color: '#fca5a5', margin: 0 }}>🤖 AI Generated</h3>
                                     <h2 style={{ fontSize: '2.5rem', color: '#ef4444', margin: '5px 0' }}>{scores.ai}%</h2>
                                 </div>
-                                {/* Human Score Box */}
                                 <div style={{ padding: '15px', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '12px' }}>
                                     <h3 style={{ color: '#6ee7b7', margin: 0 }}>👤 Human Written</h3>
                                     <h2 style={{ fontSize: '2.5rem', color: '#10b981', margin: '5px 0' }}>{scores.human}%</h2>
@@ -291,9 +271,10 @@ const handleDetect = async (e) => {
         </main>
     );
 };
-// ==========================================
-// NAYA COMPONENT: Contact Us Page
-// ==========================================
+
+// ============================================================
+// 4. Contact Component
+// ============================================================
 const ContactContent = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formStatus, setFormStatus] = useState("");
@@ -314,7 +295,6 @@ const ContactContent = () => {
         setFormStatus("");
 
         try {
-            // Formspree API call jo data direct aapki email par bhejegi
             const response = await fetch("https://formspree.io/f/xzdwbwyk", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -381,9 +361,10 @@ const ContactContent = () => {
         </main>
     );
 };
-// Isko ContactContent ke neeche aur Footer component se pehle paste karein
 
-// app.js mein TermsContent component ko is wrapper se update karein:
+// ============================================================
+// 5. Terms Component
+// ============================================================
 const TermsContent = () => {
     return (
         <main className="app-main humanizer-page-layout">
@@ -396,11 +377,9 @@ const TermsContent = () => {
                 </p>
             </div>
 
-            {/* AI-Form class hata kar exclusive content card class apply ki hai */}
             <div className="premium-terms-card-view">
-                
                 <p style={{ color: '#f1f5f9', fontSize: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '15px', margin: '0 0 20px 0' }}>
-                    Welcome to <strong>GlyphHuman</strong>. By accessing or utilizing our AI Text Humanizer and AI Content Detector, you acknowledge and agree to be bound by the following comprehensive Terms & Conditions. If you do not agree with any part of these operational guidelines, you must cease using our services instantly.
+                    Welcome to <strong>GlyphHuman</strong>. By accessing or utilizing our AI Text Humanizer and AI Content Detector, you acknowledge and agree to be bound by the following comprehensive Terms & Conditions.
                 </p>
 
                 <div style={{ marginBottom: '20px' }}>
@@ -408,8 +387,8 @@ const TermsContent = () => {
                         <span style={{ color: '#a855f7' }}>1.</span> Use of Services and Licensing
                     </h3>
                     <ul style={{ paddingLeft: '20px', margin: '0', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                        <li>GlyphHuman grants you a non-exclusive, non-transferable, and revocable license to utilize our heuristic processing tools for personal, academic, or professional content optimization.</li>
-                        <li>You retain complete, absolute ownership of any text inputs you submit through our platform. GlyphHuman acts strictly as an instantaneous intermediary processing engine.</li>
+                        <li>GlyphHuman grants you a non-exclusive, non-transferable, and revocable license to utilize our heuristic processing tools.</li>
+                        <li>You retain complete, absolute ownership of any text inputs you submit through our platform.</li>
                     </ul>
                 </div>
 
@@ -417,49 +396,28 @@ const TermsContent = () => {
                     <h3 style={{ color: '#fff', fontSize: '18px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <span style={{ color: '#a855f7' }}>2.</span> Prohibited Activities
                     </h3>
-                    <p style={{ marginBottom: '6px' }}>By using GlyphHuman, you explicitly agree not to:</p>
                     <ul style={{ paddingLeft: '20px', margin: '0', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                        <li>Deploy automated bots, scrapers, or malicious extraction scripts to spam or overload our backend API ports (<code style={{ background: 'rgba(255,255,255,0.06)', padding: '2px 6px', borderRadius: '4px', color: '#f43f5e' }}>/analyze</code> or <code style={{ background: 'rgba(255,255,255,0.06)', padding: '2px 6px', borderRadius: '4px', color: '#f43f5e' }}>/humanize</code>).</li>
-                        <li>Utilize our service to process content that violates local laws, contains hate speech, or promotes structural harassment.</li>
-                        <li>Attempt to reverse-engineer our proprietary keyword-mapping and burstiness simulation codebases.</li>
+                        <li>Deploy automated bots to spam our backend API.</li>
+                        <li>Utilize our service to process content that violates local laws.</li>
                     </ul>
-                </div>
-
-                <div style={{ marginBottom: '20px' }}>
-                    <h3 style={{ color: '#fff', fontSize: '18px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <span style={{ color: '#a855f7' }}>3.</span> Disclaimer of Warranties (Accuracy Limit)
-                    </h3>
-                    <ul style={{ paddingLeft: '20px', margin: '0', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                        <li>GlyphHuman offers its utility on an "As-Is" and "As-Available" structural basis.</li>
-                        <li>While our custom linguistic logic is built to significantly lower AI percentages and optimize text rhythm, we do not guarantee a fixed 100% bypass rate against third-party enterprise AI detectors, as their external algorithms are continuously evolving.</li>
-                        <li>GlyphHuman holds zero liability for any academic, professional, or corporate disciplinary actions resulting from the use of our text re-writer.</li>
-                    </ul>
-                </div>
-
-                <div style={{ marginBottom: '20px' }}>
-                    <h3 style={{ color: '#fff', fontSize: '18px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <span style={{ color: '#a855f7' }}>4.</span> Service Modifications
-                    </h3>
-                    <p style={{ margin: '0' }}>
-                        We reserve the right to modify, adjust, suspend, or update these Terms & Conditions at any point without prior individual notice to optimize live site deployment structures on platforms like Vercel. Continued use of our dashboard following updates constitutes your absolute acceptance of the revised terms.
-                    </p>
                 </div>
 
                 <div style={{ background: 'rgba(139, 92, 246, 0.05)', border: '1px solid rgba(139, 92, 246, 0.15)', padding: '20px', borderRadius: '16px', marginTop: '20px' }}>
                     <h3 style={{ color: '#c084fc', fontSize: '16px', marginBottom: '6px', margin: '0' }}>
-                        📧 5. Contact Information
+                        📧 Contact Information
                     </h3>
                     <p style={{ margin: '5px 0 0 0', color: '#94a3b8' }}>
-                        For any legal inquiries, data clarification, or institutional questions regarding these terms, please contact us at: <a href="mailto:legal@glyphhuman.com" style={{ color: '#6366f1', textDecoration: 'none', fontWeight: '600' }}>resumeprohub1@gmail.com</a>
+                        For any legal inquiries: <a href="mailto:resumeprohub1@gmail.com" style={{ color: '#6366f1', textDecoration: 'none', fontWeight: '600' }}>resumeprohub1@gmail.com</a>
                     </p>
                 </div>
-
             </div>
         </main>
     );
 };
-// Isko TermsContent component ke bilkul neeche paste karein
 
+// ============================================================
+// 6. Privacy Component
+// ============================================================
 const PrivacyContent = () => {
     return (
         <main className="app-main humanizer-page-layout">
@@ -472,63 +430,37 @@ const PrivacyContent = () => {
                 </p>
             </div>
 
-            {/* Premium terms/privacy generic card style viewport */}
             <div className="premium-terms-card-view">
-                
                 <p style={{ color: '#f1f5f9', fontSize: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '15px', margin: '0 0 20px 0' }}>
-                    At <strong>GlyphHuman</strong>, accessible from our platform, one of our main priorities is the privacy of our visitors. This Privacy Policy document outlines the types of information that is processed and how we maintain strict confidentiality regarding your text.
+                    At <strong>GlyphHuman</strong>, one of our main priorities is the privacy of our visitors.
                 </p>
 
                 <div style={{ marginBottom: '20px' }}>
                     <h3 style={{ color: '#fff', fontSize: '18px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <span style={{ color: '#06b6d4' }}>1.</span> Text Data and Input Processing
                     </h3>
-                    <p style={{ margin: '0 0 8px 0' }}>GlyphHuman operates as an instant text optimization utility. When you paste your text into the AI Text Humanizer or AI Content Detector:</p>
+                    <p style={{ margin: '0 0 8px 0' }}>GlyphHuman operates as an instant text optimization utility.</p>
                     <ul style={{ paddingLeft: '20px', margin: '0', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                        <li>The text is securely transmitted to our processing script to calculate linguistic density, vocabulary richness, and sentence variation.</li>
-                        <li><strong>We do not save, store, or cache your text.</strong> Once the processed output or score is delivered back to your dashboard browser window, the data is instantly wiped from our temporary server memory. Your proprietary content remains 100% yours.</li>
+                        <li><strong>We do not save, store, or cache your text.</strong> Once processed, data is instantly wiped.</li>
                     </ul>
-                </div>
-
-                <div style={{ marginBottom: '20px' }}>
-                    <h3 style={{ color: '#fff', fontSize: '18px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <span style={{ color: '#06b6d4' }}>2.</span> Information We Collect
-                    </h3>
-                    <p style={{ margin: '0 0 6px 0' }}>If you contact us directly via our Contact Us form, we may collect basic credentials including:</p>
-                    <ul style={{ paddingLeft: '20px', margin: '0', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                        <li>Your Name</li>
-                        <li>Your Email Address</li>
-                        <li>The contents of the message or attachments you send us.</li>
-                    </ul>
-                    <p style={{ margin: '8px 0 0 0' }}>
-                        This information is exclusively used to respond to your queries and will never be shared, sold, or distributed to third-party marketing networks.
-                    </p>
-                </div>
-
-                <div style={{ marginBottom: '20px' }}>
-                    <h3 style={{ color: '#fff', fontSize: '18px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <span style={{ color: '#06b6d4' }}>3.</span> Log Files and Local Cache
-                    </h3>
-                    <p style={{ margin: '0' }}>
-                        GlyphHuman follows a standard procedure of utilizing temporary browser session configurations. These are used solely to optimize layout performance, rendering metrics, and fluid navigation between dashboard panels.
-                    </p>
                 </div>
 
                 <div style={{ background: 'rgba(6, 182, 212, 0.05)', border: '1px solid rgba(6, 182, 212, 0.15)', padding: '20px', borderRadius: '16px', marginTop: '20px' }}>
                     <h3 style={{ color: '#22d3ee', fontSize: '16px', marginBottom: '6px', margin: '0' }}>
-                        ✅ 4. Consent
+                        ✅ Consent
                     </h3>
                     <p style={{ margin: '5px 0 0 0', color: '#94a3b8' }}>
-                        By utilizing our website and inputting text into our tools, you hereby consent to our Privacy Policy and agree to its operational terms.
+                        By utilizing our website, you consent to our Privacy Policy.
                     </p>
                 </div>
-
             </div>
         </main>
     );
 };
-// Isko PrivacyContent component ke bilkul neeche paste karein
 
+// ============================================================
+// 7. About Component
+// ============================================================
 const AboutContent = () => {
     return (
         <main className="app-main humanizer-page-layout">
@@ -541,11 +473,9 @@ const AboutContent = () => {
                 </p>
             </div>
 
-            {/* Same layout design card used for auto-height fix */}
             <div className="premium-terms-card-view">
-                
                 <p style={{ color: '#f1f5f9', fontSize: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '15px', margin: '0 0 20px 0', lineHeight: '1.8' }}>
-                    Welcome to <strong>GlyphHuman</strong>, your ultimate digital companion designed to bridge the gap between artificial intelligence and natural human expression. In a world where AI-generated content is rapidly shifting the digital landscape, we believe that the unique touch of human creativity, rhythm, and expression should never be lost.
+                    Welcome to <strong>GlyphHuman</strong>, your ultimate digital companion designed to bridge the gap between artificial intelligence and natural human expression.
                 </p>
 
                 <div style={{ marginBottom: '25px' }}>
@@ -553,35 +483,19 @@ const AboutContent = () => {
                         🚀 Our Mission
                     </h3>
                     <p style={{ margin: '0', lineHeight: '1.7' }}>
-                        Our mission is simple: to empower writers, students, content creators, and professionals to refine their text seamlessly. Whether you want to analyze content authenticity or transform robotic, structured AI prose into fluid, natural, and human-like writing, GlyphHuman provides a swift, secure, and reliable algorithmic solution—completely free from heavy, restrictive machine-learning dependencies.
+                        Our mission is simple: to empower writers, students, content creators, and professionals to refine their text seamlessly.
                     </p>
                 </div>
-
-                <div>
-                    <h3 style={{ color: '#fff', fontSize: '19px', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        💡 Why Choose GlyphHuman?
-                    </h3>
-                    <ul style={{ paddingLeft: '20px', margin: '0', display: 'flex', flexDirection: 'column', gap: '12px', lineHeight: '1.7' }}>
-                        <li>
-                            <strong style={{ color: '#c084fc' }}>Algorithmic Precision:</strong> We utilize advanced, heuristic linguistic patterns to identify and rewrite robotic transitions instantly.
-                        </li>
-                        <li>
-                            <strong style={{ color: '#c084fc' }}>Bypass with Confidence:</strong> Our smart word-mapping and burstiness simulation help your content naturally bypass rigid AI detection systems.
-                        </li>
-                        <li>
-                            <strong style={{ color: '#c084fc' }}>Privacy-First Architecture:</strong> Your text is analyzed and processed instantly on our servers. We never store, save, or misuse your intellectual property.
-                        </li>
-                    </ul>
-                </div>
-
             </div>
         </main>
     );
 };
-// Isko app.js mein baaki content components ke paas paste karein
 
+// ============================================================
+// 8. Home Component
+// ============================================================
 const HomeContent = ({ setActivePage }) => {
-    const [typedText, setTypedText] = React.useState("");
+    const [typedText, setTypedText] = useState("");
     const words = [
         "Transforming AI prose to human writing...",
         "Bypassing AI detectors instantly...",
@@ -589,7 +503,7 @@ const HomeContent = ({ setActivePage }) => {
         "Natural language, real results..."
     ];
 
-    React.useEffect(() => {
+    useEffect(() => {
         let wi = 0, ci = 0, del = false;
         let timeout;
         const type = () => {
@@ -611,20 +525,14 @@ const HomeContent = ({ setActivePage }) => {
 
     return (
         <main className="app-main premium-home-layout">
-
-            {/* ORB LIGHTS */}
             <div className="orb-lights">
                 <div className="orb-1"></div>
                 <div className="orb-2"></div>
                 <div className="orb-3"></div>
             </div>
 
-            {/* HERO */}
             <section className="home-hero-section">
-
-                {/* LEFT — Text */}
                 <div className="home-hero-text animate-fade-in-left">
-
                     <div className="premium-badge">
                         <div className="badge-live-dot"></div>
                         Next-Gen AI Text Optimizer
@@ -670,7 +578,6 @@ const HomeContent = ({ setActivePage }) => {
                     </div>
                 </div>
 
-                {/* RIGHT — Visual Card */}
                 <div className="home-hero-graphic animate-fade-in-right">
                     <div className="hero-visual-card">
                         <div className="hvc-header">
@@ -713,7 +620,6 @@ const HomeContent = ({ setActivePage }) => {
                 </div>
             </section>
 
-            {/* TRUST BAR */}
             <div className="home-trust-bar">
                 <div className="trust-item"><span className="trust-icon">⚡</span><span className="trust-text"><strong>Instant</strong> Processing</span></div>
                 <div className="trust-item"><span className="trust-icon">🛡️</span><span className="trust-text"><strong>100%</strong> Confidential</span></div>
@@ -722,7 +628,6 @@ const HomeContent = ({ setActivePage }) => {
                 <div className="trust-item"><span className="trust-icon">🆓</span><span className="trust-text"><strong>Completely</strong> Free</span></div>
             </div>
 
-            {/* HOW IT WORKS */}
             <section className="home-how-section animate-fade-in-up" style={{textAlign:'center'}}>
                 <span className="home-section-tag">Simple Process</span>
                 <h2 className="home-section-title">How It <span className="gradient-text-accent" style={{display:'inline'}}>Works</span></h2>
@@ -748,7 +653,6 @@ const HomeContent = ({ setActivePage }) => {
                 </div>
             </section>
 
-            {/* FEATURES */}
             <section className="home-features-section animate-fade-in-up" style={{marginTop:'70px',textAlign:'center'}}>
                 <span className="home-section-tag">Core Features</span>
                 <h2 className="home-section-title">Why Choose <span className="gradient-text-accent" style={{display:'inline'}}>GlyphHuman?</span></h2>
@@ -787,21 +691,18 @@ const HomeContent = ({ setActivePage }) => {
                     </div>
                 </div>
             </section>
-
         </main>
     );
 };
-// 3. Footer Component
-// 3. Footer Component
+
+// ============================================================
+// 9. Footer Component
+// ============================================================
 const Footer = ({ setActivePage }) => {
     return (
         <footer className="app-footer">
             <div className="footer-container">
-                
-                {/* NAYA TOP ROW - 3 Columns Layout */}
                 <div className="footer-top-row">
-                    
-                    {/* Column 1: Brand Info & Description */}
                     <div className="footer-brand">
                         <div className="header-logo" onClick={() => setActivePage('home')} style={{ cursor: 'pointer', fontSize: '24px', marginBottom: '12px', justifyContent: 'flex-start' }}>
                             <span className="logo-icon">✦</span> GlyphHuman
@@ -811,7 +712,6 @@ const Footer = ({ setActivePage }) => {
                         </p>
                     </div>
 
-                    {/* Column 2: Quick Navigation */}
                     <div className="footer-links-col">
                         <h4 className="footer-col-title">Quick Nav</h4>
                         <a href="#home" onClick={(e) => { e.preventDefault(); setActivePage('home'); }} className="footer-link">Home</a>
@@ -821,7 +721,6 @@ const Footer = ({ setActivePage }) => {
                         <a href="#contact" onClick={(e) => { e.preventDefault(); setActivePage('contact'); }} className="footer-link">Contact</a>
                     </div>
 
-                    {/* Column 3: Legal Pages */}
                     <div className="footer-links-col">
                         <h4 className="footer-col-title">Legal</h4>
                         <a href="#privacy" onClick={(e) => { e.preventDefault(); setActivePage('privacy'); }} className="footer-link">Privacy Policy</a>
@@ -829,7 +728,6 @@ const Footer = ({ setActivePage }) => {
                     </div>
                 </div>
 
-                {/* Lower Tier: Copyright Left Par Aur Paras Ka Badge Right Par (Waisa hi rakha hai) */}
                 <div className="footer-bottom-row">
                     <div className="footer-credits">
                         <span className="copyright-text">
@@ -843,17 +741,15 @@ const Footer = ({ setActivePage }) => {
                         </span>
                     </div>
                 </div>
-
             </div>
         </footer>
     );
 };
-// App Function Component (Fully updated and structural shell)
-// App Function Component (Fully updated routing logic)
-// App component ka state aur routing block is tarah change karein:
 
+// ============================================================
+// 10. App Component
+// ============================================================
 const App = () => {
-    // Default page ko ab 'home' set kar diya hai
     const [activePage, setActivePage] = useState('home');
 
     useEffect(() => {
@@ -861,7 +757,7 @@ const App = () => {
     }, []);
 
     const renderPage = () => {
-        if (activePage === 'home') return <HomeContent setActivePage={setActivePage} />; // <-- ADDED
+        if (activePage === 'home') return <HomeContent setActivePage={setActivePage} />;
         if (activePage === 'humanizer') return <MainContent />;
         if (activePage === 'detector') return <DetectorContent />;
         if (activePage === 'contact') return <ContactContent />;
@@ -873,7 +769,6 @@ const App = () => {
 
     return (
         <div className="app-container">
-            {/* Header ko setActivePage pass kar rahe hain taake logo par click karke home aa sakein */}
             <Header setActivePage={setActivePage} />
             {renderPage()}
             <Footer setActivePage={setActivePage} />
@@ -881,7 +776,9 @@ const App = () => {
     );
 };
 
-// Rendering React Root Component inside DOM
+// ============================================================
+// 11. Render to DOM
+// ============================================================
 const rootElement = document.getElementById('root');
 const root = ReactDOM.createRoot(rootElement);
 root.render(<App />);
