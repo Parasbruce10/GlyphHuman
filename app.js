@@ -363,7 +363,7 @@ const ContactContent = () => {
 };
 
 // ============================================================
-// 5. Terms Component
+// 5. Terms Component (Shortened)
 // ============================================================
 const TermsContent = () => {
     return (
@@ -416,7 +416,7 @@ const TermsContent = () => {
 };
 
 // ============================================================
-// 6. Privacy Component
+// 6. Privacy Component (Shortened)
 // ============================================================
 const PrivacyContent = () => {
     return (
@@ -459,7 +459,7 @@ const PrivacyContent = () => {
 };
 
 // ============================================================
-// 7. About Component
+// 7. About Component (Shortened)
 // ============================================================
 const AboutContent = () => {
     return (
@@ -753,18 +753,20 @@ const App = () => {
     const [activePage, setActivePage] = useState('home');
 
     useEffect(() => {
-        console.log("GlyphHuman interface loaded.");
+        console.log("✅ GlyphHuman interface loaded successfully!");
     }, []);
 
     const renderPage = () => {
-        if (activePage === 'home') return <HomeContent setActivePage={setActivePage} />;
-        if (activePage === 'humanizer') return <MainContent />;
-        if (activePage === 'detector') return <DetectorContent />;
-        if (activePage === 'contact') return <ContactContent />;
-        if (activePage === 'terms') return <TermsContent />;
-        if (activePage === 'privacy') return <PrivacyContent />;
-        if (activePage === 'about') return <AboutContent />;
-        return <HomeContent setActivePage={setActivePage} />;
+        switch(activePage) {
+            case 'home': return <HomeContent setActivePage={setActivePage} />;
+            case 'humanizer': return <MainContent />;
+            case 'detector': return <DetectorContent />;
+            case 'contact': return <ContactContent />;
+            case 'terms': return <TermsContent />;
+            case 'privacy': return <PrivacyContent />;
+            case 'about': return <AboutContent />;
+            default: return <HomeContent setActivePage={setActivePage} />;
+        }
     };
 
     return (
@@ -780,5 +782,9 @@ const App = () => {
 // 11. Render to DOM
 // ============================================================
 const rootElement = document.getElementById('root');
-const root = ReactDOM.createRoot(rootElement);
-root.render(<App />);
+if (rootElement) {
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(<App />);
+} else {
+    console.error("❌ Root element not found!");
+}
